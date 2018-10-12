@@ -48,7 +48,6 @@ public class Lexer {
 		if ('A' <= c && c <= 'F') return CT_A;
 		return CT_OTHER;
 	}
-	
 	int[][] delta = {
 		/* TODO */
 		/* 状態遷移表を作る */
@@ -57,7 +56,14 @@ public class Lexer {
 		/*  P  X  0  1  A  OTHER */
 		/*{ ?, ?, ?, ?, ?, ?}, /* 状態0 */
 		/*{ ?, ?, ?, ?, ?, ?}, /* 状態1 */
-		/*...*/
+		{1, 9, 3, 5, 7, 9},
+		{9, 9, 9, 2, 9, 9},
+		{9, 9, 9, 2, 9, 9},
+		{1, 6, 9, 4, 7, 9},
+		{9, 9, 9, 4, 7, 9},
+		{1, 9, 5, 5, 7, 9},
+		{9, 9, 7, 7, 7, 9},
+		{9, 9, 9, 7, 7, 9}
 	};
 
 	/*
@@ -84,7 +90,18 @@ public class Lexer {
 			/* TODO */
 			/* 行先がなければループを抜ける */
 			/* 行先が受理状態であれば「最後の受理状態」を更新する */
-
+			
+			//　9 = 行き先のない台風
+			if (nextState == 9) break;
+			if (nextState == 2) {
+				// .を識別したためDEC
+				acceptMarker = Token.TYPE_DEC;
+				acceptPos = p;
+			}
+			if (nextState == 3 || nextState == 5 || nextState == 7) {
+				acceptMarker = Token.TYPE_INT;
+				acceptPos = p;
+			}
 			currentState = nextState;
 		}
 		
